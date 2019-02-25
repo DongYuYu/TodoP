@@ -48,4 +48,6 @@ public interface WordDao {
 
     @Query("DELETE FROM word_table")
     void deleteAll();
+    @Query("SELECT * from word_table ORDER BY word ASC")
+    List<Word> getStaticAlphabetizedWords();
 }

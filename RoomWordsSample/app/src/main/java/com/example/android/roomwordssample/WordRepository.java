@@ -19,6 +19,7 @@ package com.example.android.roomwordssample;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.List;
 
@@ -27,46 +28,69 @@ import java.util.List;
  * https://developer.android.com/topic/libraries/architecture/guide.html
  */
 
-public class WordRepository {
-
+public class WordRepository implements DataSource{
+    private List<Word> allWords;
     private WordDao mWordDao;
     private LiveData<List<Word>> mAllWords;
 
-    // Note that in order to unit test the WordRepository, you have to remove the Application
-    // dependency. This adds complexity and much more code, and this sample is not about testing.
-    // See the BasicSample in the android-architecture-components repository at
-    // https://github.com/googlesamples
     WordRepository(Application application) {
         WordRoomDatabase db = WordRoomDatabase.getDatabase(application);
         mWordDao = db.wordDao();
         mAllWords = mWordDao.getAlphabetizedWords();
-    }
 
+
+        new ReadAsyncTask().execute();
+
+    }
     // Room executes all queries on a separate thread.
     // Observed LiveData will notify the observer when the data has changed.
     LiveData<List<Word>> getAllWords() {
         return mAllWords;
     }
+    List<Word> getStaticAllWords() {
+        return allWords;
+    }
 
+    private class ReadAsyncTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(final Void... params) {
+            allWords = mWordDao.getStaticAlphabetizedWords();
+            Log.i("retrieve", "done");
+
+
+
+
+            return null;
+        }
+    }
     // You must call this on a non-UI thread or your app will crash.
     // Like this, Room ensures that you're not doing any long running operations on the main
     // thread, blocking the UI.
-    public void insert (Word word) {
-        new insertAsyncTask(mWordDao).execute(word);
+    public void insert (Word word, OnInsertCallBack callback) {
+        new insertAsyncTask(mWordDao, callback).execute(word);
     }
 
-    private static class insertAsyncTask extends AsyncTask<Word, Void, Void> {
-
+    class insertAsyncTask extends AsyncTask<Word, Void, List<Word>> {
         private WordDao mAsyncTaskDao;
-
-        insertAsyncTask(WordDao dao) {
+        private OnInsertCallBack callback;
+        insertAsyncTask(WordDao dao, OnInsertCallBack callback) {
             mAsyncTaskDao = dao;
+            this.callback = callback;
         }
 
         @Override
-        protected Void doInBackground(final Word... params) {
+        protected List<Word> doInBackground(final Word... params) {
+
             mAsyncTaskDao.insert(params[0]);
-            return null;
+            return mAsyncTaskDao.getStaticAlphabetizedWords();
         }
+
+        @Override
+        protected void onPostExecute(List<Word> params) {
+            callback.onWordInserted(params);
+            return;
+        }
+
+
     }
 }
