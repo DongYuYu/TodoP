@@ -1,4 +1,4 @@
-package com.example.android.roomwordssample;
+package com.example.android.roomwordssample.data.source;
 
 /*
  * Copyright (C) 2018 Google Inc.
@@ -21,6 +21,10 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.android.roomwordssample.data.Word;
+import com.example.android.roomwordssample.data.source.local.WordDao;
+import com.example.android.roomwordssample.data.source.local.WordRoomDatabase;
+
 import java.util.List;
 
 /**
@@ -28,12 +32,12 @@ import java.util.List;
  * https://developer.android.com/topic/libraries/architecture/guide.html
  */
 
-public class WordRepository implements DataSource{
+public class WordRepository implements DataSource {
     private List<Word> allWords;
     private WordDao mWordDao;
     private LiveData<List<Word>> mAllWords;
 
-    WordRepository(Application application) {
+    public WordRepository(Application application) {
         WordRoomDatabase db = WordRoomDatabase.getDatabase(application);
         mWordDao = db.wordDao();
         mAllWords = mWordDao.getAlphabetizedWords();
@@ -47,7 +51,7 @@ public class WordRepository implements DataSource{
     LiveData<List<Word>> getAllWords() {
         return mAllWords;
     }
-    List<Word> getStaticAllWords() {
+    public List<Word> getStaticAllWords() {
         return allWords;
     }
 

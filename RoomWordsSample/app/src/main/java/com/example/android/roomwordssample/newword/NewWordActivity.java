@@ -1,4 +1,4 @@
-package com.example.android.roomwordssample;
+package com.example.android.roomwordssample.newword;
 
 /*
  * Copyright (C) 2018 Google Inc.
@@ -24,11 +24,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.android.roomwordssample.R;
+
 /**
  * Activity for entering a word.
  */
 
-public class NewWordActivity extends AppCompatActivity {
+public class NewWordActivity extends AppCompatActivity implements NewWordContract.View{
 
     public static final String EXTRA_REPLY = "com.example.android.roomwordssample.REPLY";
 

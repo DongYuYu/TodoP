@@ -1,4 +1,4 @@
-package com.example.android.roomwordssample;
+package com.example.android.roomwordssample.main;
 
 /*
  * Copyright (C) 2018 Google Inc.
@@ -16,11 +16,8 @@ package com.example.android.roomwordssample;
  * limitations under the License.
  */
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,15 +28,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.android.roomwordssample.R;
+import com.example.android.roomwordssample.WordListAdapter;
+import com.example.android.roomwordssample.WordViewModel;
+import com.example.android.roomwordssample.data.Word;
+import com.example.android.roomwordssample.newword.NewWordActivity;
+
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements Contract.View{
+public class MainActivity extends AppCompatActivity implements MainContract.View{
 
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
 
     private WordViewModel mWordViewModel;
-    public Contract.Presenter presenter;
+    public MainContract.Presenter presenter;
 
 
     WordListAdapter adapter;
@@ -55,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View{
         adapter = new WordListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        presenter = new Presenter(this, getApplication());
+        presenter = new MainPresenter(this, getApplication());
         presenter.getAllWords();
         // Get a new or existing ViewModel from the ViewModelProvider.
 //        mWordViewModel = ViewModelProviders.of(this).get(WordViewModel.class);

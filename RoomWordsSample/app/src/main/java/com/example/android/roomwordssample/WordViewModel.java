@@ -20,6 +20,9 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 
+import com.example.android.roomwordssample.data.Word;
+import com.example.android.roomwordssample.data.source.WordRepository;
+
 import java.util.List;
 
 /**

@@ -1,4 +1,4 @@
-package com.example.android.roomwordssample;
+package com.example.android.roomwordssample.data.source.local;
 
 /*
  * Copyright (C) 2018 Google Inc.
@@ -21,6 +21,8 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+
+import com.example.android.roomwordssample.data.Word;
 
 import java.util.List;
 
@@ -48,6 +50,7 @@ public interface WordDao {
 
     @Query("DELETE FROM word_table")
     void deleteAll();
+    //SELECT EXISTS (SELECT * FROM <tableName>);
     @Query("SELECT * from word_table ORDER BY word ASC")
     List<Word> getStaticAlphabetizedWords();
 }
